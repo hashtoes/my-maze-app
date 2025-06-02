@@ -12,9 +12,9 @@ export const generateMaze = (width: number, height: number): Cell[][] => {
   );
 
   const directions = [
-    { dx: 0, dy: -1, wall: 'top', opposite: 'bottom' },
+    { dx: 0, dy: 1, wall: 'top', opposite: 'bottom' },
     { dx: 1, dy: 0, wall: 'right', opposite: 'left' },
-    { dx: 0, dy: 1, wall: 'bottom', opposite: 'top' },
+    { dx: 0, dy: -1, wall: 'bottom', opposite: 'top' },
     { dx: -1, dy: 0, wall: 'left', opposite: 'right' },
   ];
 
