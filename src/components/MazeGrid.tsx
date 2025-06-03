@@ -5,8 +5,9 @@ import './MazeGrid.css';
 
 interface MazeGridProps {
     maze: Cell[][];
+    playerPos: { x: number; y: number };
 }
-const MazeGrid: React.FC<MazeGridProps> = ({ maze }) => {
+const MazeGrid: React.FC<MazeGridProps> = ({ maze, playerPos }) => {
     const height = maze.length;
 
     return (
@@ -23,7 +24,7 @@ const MazeGrid: React.FC<MazeGridProps> = ({ maze }) => {
                                 borderLeft: cell.left ? '2px solid #333' : '2px solid transparent',
                             };
 
-                            const isPlayer = x === 0 && y === 0;
+                            const isPlayer = playerPos.x === x && playerPos.y === y;
 
                             return (
                                 <div
