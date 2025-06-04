@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { Cell } from '../types';
+import type { Cell, Direction } from '../types';
 
 export function usePlayer(maze: Cell[][]) {
   const [playerPos, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [playerDirection, setPlayerDirection] = useState<Direction>('up');
   const [isGoalReached, setGoalReached] = useState(false);
 
   const rows = maze.length;
@@ -10,7 +11,7 @@ export function usePlayer(maze: Cell[][]) {
 
   const goal = { x: cols - 1, y: rows - 1 };
 
-  const movePlayer = (direction: 'up' | 'down' | 'left' | 'right') => {
+  const movePlayer = (direction: Direction) => {
     if (isGoalReached) return;
 
     const { x, y } = playerPos;

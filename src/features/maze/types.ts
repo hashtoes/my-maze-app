@@ -1,3 +1,5 @@
+import type { DIRECTIONS } from './constants';
+
 export type Cell = {
   top: boolean;
   right: boolean;
@@ -5,3 +7,5 @@ export type Cell = {
   left: boolean;
   visited: boolean;
 };
+
+export type Direction = keyof typeof DIRECTIONS;

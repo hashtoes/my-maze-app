@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import MazeGrid from '../components/MazeGrid';
+import MoveControls from '../components/MoveControls';
 import { generateMaze } from '../features/maze/utils/mazeGenerator';
 import { usePlayer } from '../features/maze/hooks/usePlayer';
 import './Home.css';
@@ -21,7 +22,7 @@ const Home: React.FC = () => {
         setMaze(newMaze);
         resetPlayer();
     }, [rows, cols, resetPlayer]);
-    const buttonClass = isGoalReached ? 'move-button goal' : 'move-button';
+    const currentCell = maze[playerPos.y][playerPos.x];
 
     return (
         <div>
@@ -35,16 +36,11 @@ const Home: React.FC = () => {
                 迷路を表示
             </label>
             {showMaze && <MazeGrid maze={maze} playerPos={playerPos} />}
-            <div className="controller">
-                <div>
-                    <button className={buttonClass} onClick={() => movePlayer('up')}>↑ 上</button>
-                </div>
-                <div>
-                    <button className={buttonClass} onClick={() => movePlayer('left')}>← 左</button>
-                    <button className={buttonClass} onClick={() => movePlayer('down')}>↓ 下</button>
-                    <button className={buttonClass} onClick={() => movePlayer('right')}>→ 右</button>
-                </div>
-            </div>
+            <MoveControls
+                onMove={movePlayer}
+                currentCell={currentCell}
+                isGoalReached={isGoalReached}
+            />
             <div style={{ marginTop: '12px' }}>
                 <button className="reset-button" onClick={handleReset}>🔁 リセット</button>
             </div>
