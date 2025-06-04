@@ -1,10 +1,8 @@
 import type { DIRECTIONS } from './constants';
 
 export type Cell = {
-  top: boolean;
-  right: boolean;
-  bottom: boolean;
-  left: boolean;
+  [key in Direction]: boolean; // true => wall, false => no wall
+} & {
   visited: boolean;
 };
 

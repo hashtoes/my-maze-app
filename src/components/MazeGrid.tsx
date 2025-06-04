@@ -18,9 +18,9 @@ const MazeGrid: React.FC<MazeGridProps> = ({ maze, playerPos }) => {
                     <div className="maze-row" key={y}>
                         {row.map((cell, x) => {
                             const style = {
-                                borderTop: cell.top ? '2px solid #333' : '2px solid transparent',
+                                borderTop: cell.up ? '2px solid #333' : '2px solid transparent',
                                 borderRight: cell.right ? '2px solid #333' : '2px solid transparent',
-                                borderBottom: cell.bottom ? '2px solid #333' : '2px solid transparent',
+                                borderBottom: cell.down ? '2px solid #333' : '2px solid transparent',
                                 borderLeft: cell.left ? '2px solid #333' : '2px solid transparent',
                             };
 

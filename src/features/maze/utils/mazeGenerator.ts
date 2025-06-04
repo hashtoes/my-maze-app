@@ -3,18 +3,18 @@ import type { Cell } from "../types";
 export const generateMaze = (width: number, height: number): Cell[][] => {
   const maze: Cell[][] = Array.from({ length: height }, () =>
     Array.from({ length: width }, () => ({
-      top: true,
+      up: true,
       right: true,
-      bottom: true,
+      down: true,
       left: true,
       visited: false,
     }))
   );
 
   const directions = [
-    { dx: 0, dy: 1, wall: 'top', opposite: 'bottom' },
+    { dx: 0, dy: 1, wall: 'up', opposite: 'down' },
     { dx: 1, dy: 0, wall: 'right', opposite: 'left' },
-    { dx: 0, dy: -1, wall: 'bottom', opposite: 'top' },
+    { dx: 0, dy: -1, wall: 'down', opposite: 'up' },
     { dx: -1, dy: 0, wall: 'left', opposite: 'right' },
   ];
 
@@ -39,8 +39,8 @@ export const generateMaze = (width: number, height: number): Cell[][] => {
 
   carve(0, 0);
 
-  // maze[0][0].top = false;
-  // maze[width - 1][height - 1].bottom = false;
+  // maze[0][0].up = false;
+  // maze[width - 1][height - 1].down = false;
 
   return maze;
 }

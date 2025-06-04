@@ -15,7 +15,7 @@ const Home: React.FC = () => {
 
     const [maze, setMaze] = useState(() => generateMaze(rows, cols));
     const { playerPos, movePlayer, resetPlayer, isGoalReached } = usePlayer(maze);
-    const [showMaze, setShowMaze] = useState(true);
+    const [showMaze, setShowMaze] = useState(false);
 
     const handleReset = useCallback(() => {
         const newMaze = generateMaze(rows, cols);
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <h1>{rows}行 x {cols}列の迷路</h1>
+            <h3>{rows} x {cols}</h3>
             <label style={{ marginBottom: '12px', display: 'block' }}>
                 <input
                     type="checkbox"
@@ -39,6 +39,7 @@ const Home: React.FC = () => {
             <MoveControls
                 onMove={movePlayer}
                 currentCell={currentCell}
+                playerDir={playerPos.dir}
                 isGoalReached={isGoalReached}
             />
             <div style={{ marginTop: '12px' }}>
