@@ -34,6 +34,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <h3>{rows} x {cols}</h3>
+            {showMaze && <MazeGrid maze={maze} playerPos={playerPos} />}
             <label style={{ marginBottom: '12px', display: 'block' }}>
                 <input
                     type="checkbox"
@@ -42,7 +43,6 @@ const Home: React.FC = () => {
                 />
                 迷路を表示
             </label>
-            {showMaze && <MazeGrid maze={maze} playerPos={playerPos} />}
             <MoveControls
                 onMove={movePlayer}
                 currentCell={currentCell}

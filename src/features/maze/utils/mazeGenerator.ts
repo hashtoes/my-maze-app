@@ -1,7 +1,12 @@
 import type { Cell } from "../types";
 
-export const generateMaze = (width: number, height: number): Cell[][] => {
-  const maze: Cell[][] = Array.from({ length: height }, () =>
+export const generateMaze = (
+  width: number,
+  height: number,
+  branchFactor: number = 0.8,
+  goalBias: number = 0.2,
+): Cell[][] => {
+  const grid: Cell[][] = Array.from({ length: height }, () =>
     Array.from({ length: width }, () => ({
       up: true,
       right: true,
@@ -11,36 +16,67 @@ export const generateMaze = (width: number, height: number): Cell[][] => {
     }))
   );
 
+  const inBounds = (x: number, y: number) => x >= 0 && x < width && y >= 0 && y < height;
+
   const directions = [
     { dx: 0, dy: 1, wall: 'up', opposite: 'down' },
     { dx: 1, dy: 0, wall: 'right', opposite: 'left' },
     { dx: 0, dy: -1, wall: 'down', opposite: 'up' },
     { dx: -1, dy: 0, wall: 'left', opposite: 'right' },
-  ];
+  ] as const;
 
-  function shuffle<T>(array: T[]): T[] {
-    return array.sort(() => Math.random() - 0.5);
-  }
+  const frontier: [number, number][] = [[0, 0]];
+  grid[0][0].visited = true;
 
-  function carve(x: number, y: number) {
-    maze[y][x].visited = true;
+  while (frontier.length > 0) {
+    const index =
+      Math.random() < branchFactor
+        ? frontier.length - 1
+        : Math.floor(Math.random() * frontier.length);
+    const [x, y] = frontier[index];
 
-    for (const dir of shuffle(directions)) {
-      const nx = x + dir.dx;
-      const ny = y + dir.dy;
+    // Get unvisited neighbors
+    const neighbors = directions
+      .map(({ dx, dy, wall, opposite }) => {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (inBounds(nx, ny) && !grid[ny][nx].visited) {
+          return { x: nx, y: ny, dx, dy, wall, opposite };
+        }
+        return null;
+      })
+      .filter((n): n is NonNullable<typeof n> => n !== null);
 
-      if (ny >= 0 && ny < height && nx >= 0 && nx < width && !maze[ny][nx].visited) {
-        maze[y][x][dir.wall as keyof Cell] = false;
-        maze[ny][nx][dir.opposite as keyof Cell] = false;
-        carve(nx, ny);
+    if (neighbors.length === 0) {
+      frontier.splice(index, 1);
+      continue;
+    }
+
+    // Optional: bias against going toward the goal
+    const biasedNeighbors = neighbors.map(n => {
+      const toGoal =
+        Math.abs(n.x - (width - 1)) + Math.abs(n.y - 0); // y=0 is top
+      return { ...n, weight: 1 - goalBias * (toGoal / (width + height)) };
+    });
+
+    // Weighted random selection
+    const totalWeight = biasedNeighbors.reduce((sum, n) => sum + n.weight, 0);
+    let r = Math.random() * totalWeight;
+    let chosen: typeof biasedNeighbors[0] = biasedNeighbors[0];
+    for (const n of biasedNeighbors) {
+      r -= n.weight;
+      if (r <= 0) {
+        chosen = n;
+        break;
       }
     }
+
+    // Carve passage
+    grid[y][x][chosen.wall] = false;
+    grid[chosen.y][chosen.x][chosen.opposite] = false;
+    grid[chosen.y][chosen.x].visited = true;
+    frontier.push([chosen.x, chosen.y]);
   }
 
-  carve(0, 0);
-
-  // maze[0][0].up = false;
-  // maze[width - 1][height - 1].down = false;
-
-  return maze;
+  return grid;
 }
