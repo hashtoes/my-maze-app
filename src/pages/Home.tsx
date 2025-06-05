@@ -7,10 +7,17 @@ import './Home.css';
 
 const Home: React.FC = () => {
     const [rows, cols] = useMemo(() => {
-        const parts = document.location.pathname.split('/');
-        const r = parseInt(parts[2] || '10', 10);
-        const c = parseInt(parts[3] || '10', 10);
-        return [Math.max(5, Math.min(r, 100)), Math.max(5, Math.min(c, 100))];
+        const params = new URLSearchParams(document.location.search);
+        return [
+            Math.max(
+                5,
+                Math.min(parseInt(params.get('h') ?? '10'), 100),
+            ),
+            Math.max(
+                5,
+                Math.min(parseInt(params.get('w') ?? '10'), 100),
+            ),
+        ];
     }, []);
 
     const [maze, setMaze] = useState(() => generateMaze(rows, cols));
