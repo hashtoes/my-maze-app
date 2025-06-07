@@ -1,24 +1,20 @@
 import React from 'react';
 import './MoveControls.css';
 import type { Direction } from '../features/maze/types';
-import { DIRECTIONS } from '../features/maze/constants';
-import { numToDirection } from '../features/maze/utils/playerMove';
 
 type Props = {
     onMove: (dir: Direction) => void;
-    currentCell: {
+    adjustedCell: {
         up: boolean;
         right: boolean;
         down: boolean;
         left: boolean;
     };
-    playerDir: Direction;
     isGoalReached: boolean;
 };
 
-const MoveControls: React.FC<Props> = ({ onMove, currentCell, playerDir, isGoalReached }) => {
+const MoveControls: React.FC<Props> = ({ onMove, adjustedCell, isGoalReached }) => {
     const buttonClass = isGoalReached ? 'move-button goal' : 'move-button';
-    const directionNum = DIRECTIONS[playerDir];
 
     return (
         <div className="controller">
@@ -26,7 +22,7 @@ const MoveControls: React.FC<Props> = ({ onMove, currentCell, playerDir, isGoalR
                 <button
                     className={buttonClass}
                     onClick={() => onMove('up')}
-                    disabled={currentCell[numToDirection(directionNum)]}
+                    disabled={adjustedCell.up}
                 >
                     ↑ 上
                 </button>
@@ -35,21 +31,21 @@ const MoveControls: React.FC<Props> = ({ onMove, currentCell, playerDir, isGoalR
                 <button
                     className={buttonClass}
                     onClick={() => onMove('left')}
-                    disabled={currentCell[numToDirection(directionNum + 3)]}
+                    disabled={adjustedCell.left}
                 >
                     ← 左
                 </button>
                 <button
                     className={buttonClass}
                     onClick={() => onMove('down')}
-                    disabled={currentCell[numToDirection(directionNum + 2)]}
+                    disabled={adjustedCell.down}
                 >
                     ↓ 下
                 </button>
                 <button
                     className={buttonClass}
                     onClick={() => onMove('right')}
-                    disabled={currentCell[numToDirection(directionNum + 1)]}
+                    disabled={adjustedCell.right}
                 >
                     → 右
                 </button>

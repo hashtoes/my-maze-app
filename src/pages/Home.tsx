@@ -4,6 +4,8 @@ import MoveControls from '../components/MoveControls';
 import { generateMaze } from '../features/maze/utils/mazeGenerator';
 import { usePlayer } from '../features/maze/hooks/usePlayer';
 import './Home.css';
+import { playerPointOfViewCell } from '../features/maze/utils/playerMove';
+import CurrentView from '../components/CurrentView';
 
 const Home: React.FC = () => {
     const [rows, cols] = useMemo(() => {
@@ -31,6 +33,11 @@ const Home: React.FC = () => {
     }, [rows, cols, resetPlayer]);
     const currentCell = maze[playerPos.y][playerPos.x];
 
+    const adjustedCell = useMemo(
+        () => playerPointOfViewCell(currentCell, playerPos.dir),
+        [currentCell, playerPos.dir],
+    );
+
     return (
         <div>
             <h3>{rows} x {cols}</h3>
@@ -43,10 +50,10 @@ const Home: React.FC = () => {
                 />
                 迷路を表示
             </label>
+            <CurrentView adjustedCell={adjustedCell} />
             <MoveControls
                 onMove={movePlayer}
-                currentCell={currentCell}
-                playerDir={playerPos.dir}
+                adjustedCell={adjustedCell}
                 isGoalReached={isGoalReached}
             />
             <div style={{ marginTop: '12px' }}>

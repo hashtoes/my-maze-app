@@ -15,6 +15,15 @@ export const numToDirection = (() => {
   return (num: number) => reversedDirection[num % 4];
 })()
 
+export const playerPointOfViewCell = (cell: Cell, dir: Direction): Omit<Cell, 'visited'> => {
+  return {
+    up: cell[numToDirection(DIRECTIONS[dir])],
+    right: cell[numToDirection(DIRECTIONS[dir] + 1)],
+    down: cell[numToDirection(DIRECTIONS[dir] + 2)],
+    left: cell[numToDirection(DIRECTIONS[dir] + 3)],
+  }
+}
+
 export const newPos = (
   x: number,
   y: number,
